@@ -1,8 +1,5 @@
 FROM justckr/ubuntu-nginx:latest
 
-
-
-
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
@@ -69,19 +66,19 @@ RUN sed -i -e "s/;listen.mode = 0660/listen.mode = 0750/g" /etc/php/7.0/fpm/pool
 RUN find /etc/php/7.0/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 # Supervisor Config
-ADD conf/supervisord.conf /supervisord.conf
+ADD supervisord.conf /supervisord.conf
 RUN cat /supervisord.conf >> /etc/supervisord.conf
 
 # Start Supervisord
-ADD scripts/start.sh /start.sh
+ADD start.sh /start.sh
 RUN chmod 755 /start.sh
 
 # Setup Volume
 VOLUME ["/app"]
 
 # add test PHP file
-ADD src/index.php /app/src/public/index.php
-ADD src/index.php /app/src/public/info.php
+ADD index.php /app/src/public/index.php
+ADD index.php /app/src/public/info.php
 RUN chown -Rf www-data.www-data /app
 RUN chown -Rf www-data.www-data /var/www/html
 
